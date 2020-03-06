@@ -87,12 +87,12 @@ D_07 - As mentioned:
 D_07 - Lacking specifications in many places
 
 Coding Phase:
-D_01 - Service: saveNota() - it isn't checked if the grade exists before the actual save => possible undefined behaviour before further research
+wrong D_01 - Service: saveNota() - it isn't checked if the grade exists before the actual save => possible undefined behaviour before further research
 D_01 - TemaValidator: conditions between Deadline and Startline should be treated separately involving a different kind of message
 D_01 - Service: updateFunctions - when repo returns null => the update was successful. However, we return 0 from service, which by the previous functions represents unsuccessful
 D_01 - UI: uiSaveNota() contains some logic which should be found in the service: creating a file if the initial operation was successful
 D_01 - UI: uiExtendDeadline() doesn't have enough error cases due to lacking enough business logic also in service
-D_01-D_02 - AbstractCRUDRepository: save method throws ValidationException, but at the same time, it catches that error/exception => making it possible to be thrown
+D_01-D_02 - AbstractCRUDRepository: save method throws ValidationException, but at the same time, it catches that error/exception => making it impossible to be thrown
 D_02 - AbstractXMLRepository: catching ParserConfigurationException makes it redundant to catch after:SAXException, IOException -in methods: loadFromXmlFile, writeToXmlFile
 D_04 - UI : user input is not basically validated in a basic manner => causing crashes if the user mismatches the type of a field
 D_06 - AbstractCRUDRepository: the constructor doesn't take a generic validator => possible type-mismatch
