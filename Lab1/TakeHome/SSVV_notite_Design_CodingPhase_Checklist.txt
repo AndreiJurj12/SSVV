@@ -1,0 +1,102 @@
+Issues found:
+-not using a constant language throughout the implementation - both romanian and englih
+
+domain package:
+-lacking specifications for the methods ..however we only talk about basic methods, so it shouldn't be a major issue
+
+
+repository package:
+CrudRepository:
+-modern java standard for findOne should be Optional<E>, not E with possible return of null
+-update method doesn't return anything if the entity is updated .. usually is implemented as returning the entity before update
+
+AbstractCRUDRepository:
+-field names should be private
+-the constructor doesn't take a generic validator => possible type-mismatch
+-save method throws ValidationException, but at the same time, it catches that error/exception => making it possible to be thrown
+
+
+AbstractFileRepository:
+-protected access to private for the field, constructor
+-findAll methods always loads from the file => performance issues
+	-a new strategy should be searched
+
+AbstractXMLRepository
+-protected access to private for the field, constructor, methods:loadFromXmlFile, writeToXmlFile, createElement
+-catching ParserConfigurationException makes it redundant to catch after:SAXException, IOException
+	-in methods: loadFromXmlFile, writeToXmlFile
+
+In NotaFileRepository and NotaXMLRepository there are some commented functions: createFile
+Also NotaXmlRepository has an actual implementation of createFile separately
+
+
+validation package:
+-no specification for Validator interface
+-ValidationException extends RuntimeException which isn't a good practice (it may intefere with other errors etc.)
+
+TemaValidator:
+-conditions between Deadline and Startline should be treated separately involving a different kind of message
+
+service package:
+-only one class maintaining all the business logic => bad design
+-since here we are using only XML repository => FileRepository logic is useless => bad design
+-no specification + treating success/error cases is done with integers as return type - old design not suitable for higher level languages
+
+saveNota() - it isn't checked if the grade exists before the actual save => possible undefined behaviour before further research
+
+updateFunctions - when repo returns null => the update was successful. However, we return 0 from service, which by the previous functions
+represents unsuccessful
+updateTema may be non-public - it's only called through a different function and only that is exposed to the UI in current requirements
+
+ui package:
+-all functions except run can be made private since they are only called from the UI class
+-the input is trying to be parsed as an integer instantly => crashing the application for string inputs etc.
+-during a run session, the print menu is only called at the beginning of the program => intuitive if you don't know the commands in your head, needing
+to scroll back for the input menu
+-an input scanner is instantiated during every function => bad design
+-user input is not basically validated in a basic manner => causing crashes if the user mismatches the type of a field
+-uiSaveNota() contains some logic which should be found in the service: creating a file if the initial operation was successful
+-uiExtendDeadline() doesn't have enough error cases due to lacking enough business logic also in service
+
+
+
+Other design issues:
+-each student has a separate file with its name for his grades - however no uniqueness constraint is imposed on the name of the student
+
+
+
+Other issues:
+-Student class has no information about email and professor name
+-input file for the grades is called note.txt instead of catalog.txt
+- F3 is incomplete - no mention about email functionality
+- features from F7 are not implememented
+
+
+
+Summary:
+Design:
+D_01 - Service is a single class having too many responsabilities
+D_02 - Many features are not even implemented yet + some operations do not account for all the possible cases
+D_03 - The error are caught relatively ok as a structure, but they aren't really "handled". Moreover, it is inconsistent since service approaches it with integer return codes,
+while repository is Exception driven
+D_05 - The naming scheme is pretty consistent as meaning wise, but as mentioned there is incosistency in the languages used (romanian and english)
+D_06 - The architecture is pretty modular in terms of CRUD operations for a new entity, but complicated business logic may suffer in the current stage
+D_07 - As mentioned:
+		-file_repository logic is mostly useless to our classes
+		-Ui instantiating a Scanner for every method
+D_07 - Lacking specifications in many places
+
+Coding Phase:
+D_01 - Service: saveNota() - it isn't checked if the grade exists before the actual save => possible undefined behaviour before further research
+D_01 - TemaValidator: conditions between Deadline and Startline should be treated separately involving a different kind of message
+D_01 - Service: updateFunctions - when repo returns null => the update was successful. However, we return 0 from service, which by the previous functions represents unsuccessful
+D_01 - UI: uiSaveNota() contains some logic which should be found in the service: creating a file if the initial operation was successful
+D_01 - UI: uiExtendDeadline() doesn't have enough error cases due to lacking enough business logic also in service
+D_01-D_02 - AbstractCRUDRepository: save method throws ValidationException, but at the same time, it catches that error/exception => making it possible to be thrown
+D_02 - AbstractXMLRepository: catching ParserConfigurationException makes it redundant to catch after:SAXException, IOException -in methods: loadFromXmlFile, writeToXmlFile
+D_04 - UI : user input is not basically validated in a basic manner => causing crashes if the user mismatches the type of a field
+D_06 - AbstractCRUDRepository: the constructor doesn't take a generic validator => possible type-mismatch
+D_07 - fields and methods which are public/protected instead of private: AbstractXRepository classes
+D_07 - modern java standard for findOne should be Optional<E>, not E with possible return of null
+D_07 - update method doesn't return anything if the entity is updated .. usually is implemented as returning the entity before update
+D_07 - ValidationException extends RuntimeException which isn't a good practice (it may intefere with other errors etc.)
