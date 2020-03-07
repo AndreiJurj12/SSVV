@@ -1,5 +1,5 @@
 Issues found:
--not using a constant language throughout the implementation - both romanian and englih
+-not using a constant language throughout the implementation - both romanian and english
 
 domain package:
 -lacking specifications for the methods ..however we only talk about basic methods, so it shouldn't be a major issue
