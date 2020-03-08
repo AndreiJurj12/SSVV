@@ -38,13 +38,13 @@ public class UI {
     }
 
     public void uiPrintAllTeme() {
-        for(Tema tema : service.findAllTeme()) {
-            System.out.println(tema);
+        for(Assignment assignment : service.findAllTeme()) {
+            System.out.println(assignment);
         }
     }
 
     public void uiPrintAllNote() {
-        for(Nota note : service.findAllNote()) {
+        for(Grade note : service.findAllNote()) {
             System.out.println(note);
         }
     }
