@@ -13,20 +13,20 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class NotaXMLRepository extends AbstractXMLRepository<Pair<String, String>, Grade> {
+public class GradeXMLRepository extends AbstractXMLRepository<Pair<String, String>, Grade> {
 
-    public NotaXMLRepository(Validator<Grade> validator, String XMLfilename) {
+    public GradeXMLRepository(Validator<Grade> validator, String XMLfilename) {
         super(validator, XMLfilename);
         loadFromXmlFile();
     }
 
     protected Element getElementFromEntity(Grade grade, Document XMLdocument) {
-        Element element = XMLdocument.createElement("nota");
-        element.setAttribute("IDStudent", grade.getID().getObject1());
-        element.setAttribute("IDTema", grade.getID().getObject2());
+        Element element = XMLdocument.createElement("grade");
+        element.setAttribute("IDStudent", grade.getID().getFirst());
+        element.setAttribute("IDAssignment", grade.getID().getSecond());
 
-        element.appendChild(createElement(XMLdocument, "Nota", String.valueOf(grade.getNota())));
-        element.appendChild(createElement(XMLdocument, "SaptamanaPredare", String.valueOf(grade.getSaptamanaPredare())));
+        element.appendChild(createElement(XMLdocument, "GradeValue", String.valueOf(grade.getGradeValue())));
+        element.appendChild(createElement(XMLdocument, "DeliveryWeek", String.valueOf(grade.getDeliveryWeek())));
         element.appendChild(createElement(XMLdocument, "Feedback", grade.getFeedback()));
 
         return element;
@@ -34,31 +34,31 @@ public class NotaXMLRepository extends AbstractXMLRepository<Pair<String, String
 
     protected Grade getEntityFromNode(Element node) {
         String IDStudent = node.getAttributeNode("IDStudent").getValue();
-        String IDTema= node.getAttributeNode("IDTema").getValue();
-        double nota = Double.parseDouble(node.getElementsByTagName("Nota").item(0).getTextContent());
-        int saptamanaPredare = Integer.parseInt(node.getElementsByTagName("SaptamanaPredare").item(0).getTextContent());
+        String IDAssignment= node.getAttributeNode("IDAssignment").getValue();
+        double gradeValue = Double.parseDouble(node.getElementsByTagName("GradeValue").item(0).getTextContent());
+        int deliveryWeek = Integer.parseInt(node.getElementsByTagName("DeliveryWeek").item(0).getTextContent());
         String feedback = node.getElementsByTagName("Feedback").item(0).getTextContent();
 
-        return new Grade(new Pair(IDStudent, IDTema), nota, saptamanaPredare, feedback);
+        return new Grade(new Pair(IDStudent, IDAssignment), gradeValue, deliveryWeek, feedback);
     }
 
     public void createFile(Grade gradeObj) {
-        String idStudent = gradeObj.getID().getObject1();
+        String idStudent = gradeObj.getID().getFirst();
         StudentValidator sval = new StudentValidator();
         AssignmentValidator tval = new AssignmentValidator();
-        StudentFileRepository srepo = new StudentFileRepository(sval, "studenti.txt");
-        TemaFileRepository trepo = new TemaFileRepository(tval, "teme.txt");
+        StudentFileRepository srepo = new StudentFileRepository(sval, "Students.txt");
+        AssignmentFileRepository trepo = new AssignmentFileRepository(tval, "Assignments.txt");
 
         Student student = srepo.findOne(idStudent);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(student.getNume() + ".txt", false))) {
-            super.findAll().forEach(nota -> {
-                if (nota.getID().getObject1().equals(idStudent)) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(student.getName() + ".txt", false))) {
+            super.findAll().forEach(grade -> {
+                if (grade.getID().getFirst().equals(idStudent)) {
                     try {
-                        bw.write("Tema: " + nota.getID().getObject2() + "\n");
-                        bw.write("Nota: " + nota.getNota() + "\n");
-                        bw.write("Predata in saptamana: " + nota.getSaptamanaPredare() + "\n");
-                        bw.write("Deadline: " + trepo.findOne(nota.getID().getObject2()).getDeadline() + "\n");
-                        bw.write("Feedback: " + nota.getFeedback() + "\n\n");
+                        bw.write("Assigment: " + grade.getID().getSecond() + "\n");
+                        bw.write("GradeValue: " + grade.getGradeValue() + "\n");
+                        bw.write("DeliveryWeek: " + grade.getDeliveryWeek() + "\n");
+                        bw.write("Deadline: " + trepo.findOne(grade.getID().getSecond()).getDeadline() + "\n");
+                        bw.write("Feedback: " + grade.getFeedback() + "\n\n");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

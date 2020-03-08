@@ -5,18 +5,18 @@ import validation.Validator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class TemaXMLRepository extends AbstractXMLRepository<String, Assignment> {
+public class AssignmentXMLRepository extends AbstractXMLRepository<String, Assignment> {
 
-    public TemaXMLRepository(Validator<Assignment> validator, String XMLfilename) {
+    public AssignmentXMLRepository(Validator<Assignment> validator, String XMLfilename) {
         super(validator, XMLfilename);
         loadFromXmlFile();
     }
 
     protected Element getElementFromEntity(Assignment assignment, Document XMLdocument) {
-        Element element = XMLdocument.createElement("tema");
+        Element element = XMLdocument.createElement("assignment");
         element.setAttribute("ID", assignment.getID());
 
-        element.appendChild(createElement(XMLdocument, "Descriere", assignment.getDescriere()));
+        element.appendChild(createElement(XMLdocument, "Description", assignment.getDescription()));
         element.appendChild(createElement(XMLdocument, "Deadline", String.valueOf(assignment.getDeadline())));
         element.appendChild(createElement(XMLdocument, "Startline", String.valueOf(assignment.getStartline())));
 
@@ -25,10 +25,10 @@ public class TemaXMLRepository extends AbstractXMLRepository<String, Assignment>
 
     protected Assignment getEntityFromNode(Element node) {
         String ID = node.getAttributeNode("ID").getValue();
-        String descriere = node.getElementsByTagName("Descriere").item(0).getTextContent();
+        String description = node.getElementsByTagName("Description").item(0).getTextContent();
         int deadline = Integer.parseInt(node.getElementsByTagName("Deadline").item(0).getTextContent());
         int startline = Integer.parseInt(node.getElementsByTagName("Startline").item(0).getTextContent());
 
-        return new Assignment(ID, descriere, deadline, startline);
+        return new Assignment(ID, description, deadline, startline);
     }
 }

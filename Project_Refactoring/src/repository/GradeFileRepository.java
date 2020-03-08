@@ -5,9 +5,9 @@ import validation.*;
 import java.io.*;
 import java.util.stream.Collectors;
 
-public class NotaFileRepository extends AbstractFileRepository<Pair<String, String>, Grade> {
+public class GradeFileRepository extends AbstractFileRepository<Pair<String, String>, Grade> {
 
-    public NotaFileRepository(Validator<Grade> validator, String filename) {
+    public GradeFileRepository(Validator<Grade> validator, String filename) {
         super(validator, filename);
         loadFromFile();
     }
@@ -31,8 +31,8 @@ public class NotaFileRepository extends AbstractFileRepository<Pair<String, Stri
 
     protected void writeToFile(Grade grade) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename, true))) {
-            bw.write(grade.getID().getObject1() + "#" + grade.getID().getObject2() + "#" + grade.getNota() + "#"
-                    + grade.getSaptamanaPredare() + "#" + grade.getFeedback() + "\n");
+            bw.write(grade.getID().getFirst() + "#" + grade.getID().getSecond() + "#" + grade.getGradeValue() + "#"
+                    + grade.getDeliveryWeek() + "#" + grade.getFeedback() + "\n");
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -40,10 +40,10 @@ public class NotaFileRepository extends AbstractFileRepository<Pair<String, Stri
 
     protected void writeToFileAll() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename, false))) {
-            super.entities.values().forEach(nota -> {
+            super.entities.values().forEach(grade -> {
                 try {
-                    bw.write(nota.getID().getObject1() + "#" + nota.getID().getObject2() + "#" + nota.getNota()
-                            + "#" + nota.getSaptamanaPredare() + "#" + nota.getFeedback() + "\n");
+                    bw.write(grade.getID().getFirst() + "#" + grade.getID().getSecond() + "#" + grade.getGradeValue()
+                            + "#" + grade.getDeliveryWeek() + "#" + grade.getFeedback() + "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

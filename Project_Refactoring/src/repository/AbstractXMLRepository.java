@@ -17,7 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 
 public abstract class AbstractXMLRepository<ID, E extends HasID<ID>> extends AbstractCRUDRepository<ID, E> {
-    protected String XMLfilename;
+    private String XMLfilename;
 
     public AbstractXMLRepository(Validator<E> validator, String XMLfilename) {
         super(validator);
@@ -45,21 +45,15 @@ public abstract class AbstractXMLRepository<ID, E extends HasID<ID>> extends Abs
                 }
             }
         }
-        catch(ParserConfigurationException pce) {
-            pce.printStackTrace();
-        }
-        catch(SAXException s) {
-            s.printStackTrace();
-        }
-        catch(IOException i) {
-            i.printStackTrace();
+        catch(ParserConfigurationException | SAXException | IOException exception) {
+            exception.printStackTrace();
         }
     }
 
-    protected void writeToXmlFile() {
+    private void writeToXmlFile() {
         try {
             Document XMLdocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element root = XMLdocument.createElement("Entitati");
+            Element root = XMLdocument.createElement("entities");
             XMLdocument.appendChild(root);
 
             entities.values().forEach(entity -> root.appendChild(getElementFromEntity(entity, XMLdocument)));
@@ -67,14 +61,8 @@ public abstract class AbstractXMLRepository<ID, E extends HasID<ID>> extends Abs
             XMLtransformer.setOutputProperty(OutputKeys.INDENT, "yes");
             XMLtransformer.transform(new DOMSource(XMLdocument), new StreamResult(XMLfilename));
         }
-        catch(ParserConfigurationException pce) {
-            pce.printStackTrace();
-        }
-        catch(TransformerConfigurationException tce) {
-            tce.printStackTrace();
-        }
-        catch(TransformerException te) {
-            te.printStackTrace();
+        catch(ParserConfigurationException | TransformerException exception) {
+            exception.printStackTrace();
         }
     }
 

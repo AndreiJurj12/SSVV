@@ -6,9 +6,9 @@ import validation.*;
 import java.io.*;
 import java.util.stream.Collectors;
 
-public class TemaFileRepository extends AbstractFileRepository<String, Assignment> {
+public class AssignmentFileRepository extends AbstractFileRepository<String, Assignment> {
 
-    public TemaFileRepository(Validator<Assignment> validator, String filename) {
+    public AssignmentFileRepository(Validator<Assignment> validator, String filename) {
         super(validator, filename);
         loadFromFile();
     }
@@ -31,7 +31,7 @@ public class TemaFileRepository extends AbstractFileRepository<String, Assignmen
 
     protected void writeToFile(Assignment assignment) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename, true))) {
-            bw.write(assignment.getID() + "#" + assignment.getDescriere() + "#" + assignment.getDeadline() + "#" + assignment.getStartline() + "\n");
+            bw.write(assignment.getID() + "#" + assignment.getDescription() + "#" + assignment.getDeadline() + "#" + assignment.getStartline() + "\n");
         }
         catch(IOException ioe) {
             ioe.printStackTrace();
@@ -40,9 +40,9 @@ public class TemaFileRepository extends AbstractFileRepository<String, Assignmen
 
     protected void writeToFileAll() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename, false))) {
-            super.entities.values().forEach(tema -> {
+            super.entities.values().forEach(assignment -> {
                 try {
-                    bw.write(tema.getID() + "#" + tema.getDescriere() + "#" + tema.getDeadline() + "#" + tema.getStartline() + "\n");
+                    bw.write(assignment.getID() + "#" + assignment.getDescription() + "#" + assignment.getDeadline() + "#" + assignment.getStartline() + "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
