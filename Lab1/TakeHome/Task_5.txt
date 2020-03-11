@@ -1,0 +1,2 @@
+Through tour testing and code inspection we have found out that the functionalities are called (while not working properly some of them)
+=> no modifications necessary
