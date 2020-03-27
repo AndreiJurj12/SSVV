@@ -39,7 +39,7 @@ public class GradeXMLRepository extends AbstractXMLRepository<Pair<String, Strin
         int deliveryWeek = Integer.parseInt(node.getElementsByTagName("DeliveryWeek").item(0).getTextContent());
         String feedback = node.getElementsByTagName("Feedback").item(0).getTextContent();
 
-        return new Grade(new Pair(IDStudent, IDAssignment), gradeValue, deliveryWeek, feedback);
+        return new Grade(new Pair<>(IDStudent, IDAssignment), gradeValue, deliveryWeek, feedback);
     }
 
     public void createFile(Grade gradeObj) {

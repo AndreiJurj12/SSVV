@@ -40,7 +40,7 @@ public abstract class AbstractFileRepository<ID, E extends HasID<ID>> extends Ab
     }
 
     @Override
-    public E update(E newEntity) {
+    public E update(E newEntity) throws ValidationException {
         E result = super.update(newEntity);
         writeToFileAll();
 

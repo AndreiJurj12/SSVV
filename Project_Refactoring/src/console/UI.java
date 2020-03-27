@@ -7,186 +7,244 @@ import java.util.Scanner;
 
 public class UI {
     private Service service;
+    private Scanner scanner;
 
     public UI(Service service) {
         this.service = service;
+        this.scanner = new Scanner(System.in);
     }
 
-    public void printMenu() {
-        System.out.println("11. Afiseaza toti studentii.");
-        System.out.println("12. Afiseaza toate temele.");
-        System.out.println("13. Afiseaza toate notele.");
+    private void printMenu() {
+        System.out.println("11. Print all students");
+        System.out.println("12. Print all assignments");
+        System.out.println("13. Print all grades");
 
-        System.out.println("21. Adauga un nou student.");
-        System.out.println("22. Adauga o tema noua.");
-        System.out.println("23. Adauga o nota unui student pentru o tema.");
+        System.out.println("21. Add a new student");
+        System.out.println("22. Add a new assignment");
+        System.out.println("23. Assign a grade to a student for an assignment");
 
-        System.out.println("31. Sterge un student existent.");
-        System.out.println("32. Sterge o tema existenta.");
+        System.out.println("31. Delete an existing student");
+        System.out.println("32. Delete an existing assignment");
 
-        System.out.println("4. Actualizeaza datele unui student.");
+        System.out.println("4. Update student's data");
 
-        System.out.println("5. Prelungeste deadline-ul unei teme.");
+        System.out.println("5. Extend the deadline of an assignment");
 
         System.out.println("0. EXIT \n");
     }
 
-    public void uiPrintAllStudents() {
+    private void uiPrintAllStudents() {
         for(Student student : service.findAllStudents()) {
             System.out.println(student);
         }
     }
 
-    public void uiPrintAllTeme() {
-        for(Assignment assignment : service.findAllTeme()) {
+    private void uiPrintAllTeme() {
+        for(Assignment assignment : service.findAllAssignments()) {
             System.out.println(assignment);
         }
     }
 
-    public void uiPrintAllNote() {
-        for(Grade note : service.findAllNote()) {
+    private void uiPrintAllNote() {
+        for(Grade note : service.findAllGrades()) {
             System.out.println(note);
         }
     }
 
-    public void uiSaveStudent() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Introduceti ID-ul studentului: ");
+    private void uiSaveStudent() {
+        System.out.println("Introduce student's ID:");
         String id = scanner.nextLine();
 
-        System.out.println("Introduceti numele studentului: ");
-        String nume = scanner.nextLine();
+        System.out.println("Introduce student's name:");
+        String name = scanner.nextLine();
 
-        System.out.println("Introduceti grupa studentului: ");
-        int grupa = scanner.nextInt();
+        System.out.println("Introduce student's group:");
+        int group = 0;
+        try {
+            group = scanner.nextInt();
+        }
+        catch (Exception exception) {
+            System.out.println("Invalid group value");
+            return;
+        }
 
-        if (service.saveStudent(id, nume, grupa) != 0) {
-            System.out.println("Student adaugat cu succes! \n");
+        int resultCode = service.saveStudent(id, name, group);
+        if (resultCode == 0) {
+            System.out.println("Student successfully added");
+        }
+        else if (resultCode == -1) {
+            System.out.println("Validation failed for the student");
         }
         else {
-            System.out.println("Student existent sau invalid! \n");
+            System.out.println("Id was already taken");
         }
     }
 
-    public void uiSaveTema() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Introduceti ID-ul temei: ");
+    private void uiSaveAssignment() {
+        System.out.println("Introduce assignment's ID:");
         String id = scanner.nextLine();
 
-        System.out.println("Introduceti o descriere a temei: ");
-        String descriere = scanner.nextLine();
+        System.out.println("Introduce assignment's description:");
+        String description = scanner.nextLine();
 
-        System.out.println("Introduceti saptamana deadline a temei: ");
-        int deadline = scanner.nextInt();
+        System.out.println("Introduce assignment's deadline:");
+        int deadline = 0;
+        try {
+            deadline = scanner.nextInt();
+        }
+        catch (Exception exception) {
+            System.out.println("Invalid deadline value");
+            return;
+        }
 
-        System.out.println("Introduceti saptamana startline a temei: ");
-        int startline = scanner.nextInt();
+        System.out.println("Introduce assignment's startline:");
+        int startline = 0;
+        try {
+            startline = scanner.nextInt();
+        }
+        catch (Exception exception) {
+            System.out.println("Invalid startline value");
+            return;
+        }
 
-        if (service.saveTema(id, descriere, deadline, startline) != 0) {
-            System.out.println("Tema adaugata cu succes! \n");
+        int resultCode = service.saveAssignment(id, description, deadline, startline);
+        if (resultCode == 0) {
+            System.out.println("Assignment successfully added");
+        }
+        else if (resultCode == -1) {
+            System.out.println("Validation failed for the assignment");
         }
         else {
-            System.out.println("Tema existenta sau invalida! \n");
+            System.out.println("Id was already taken");
         }
     }
 
-    public void uiSaveNota() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Introduceti ID-ul studentului: ");
+    public void uiSaveGrade() {
+        System.out.println("Introduce student's ID:");
         String idStudent = scanner.nextLine();
 
-        System.out.println("Introduceti ID-ul temei: ");
-        String idTema = scanner.nextLine();
+        System.out.println("Introduce assignment's ID:");
+        String idAssignment = scanner.nextLine();
 
-        System.out.println("Introduceti valoarea notei: ");
-        String linie = scanner.nextLine();
-        double valNota = Double.parseDouble(linie);
+        System.out.println("Introduce grade's value:");
+        double gradeValue;
+        try {
+            String line = scanner.nextLine();
+            gradeValue = Double.parseDouble(line);
+        }
+        catch (Exception exception) {
+            System.out.println("Invalid grade value");
+            return;
+        }
 
-        System.out.println("Introduceti saptamana de predare a temei: ");
-        String linie2 = scanner.nextLine();
-        int predata = Integer.parseInt(linie2);
+        System.out.println("Introduce grade's delivery week:");
+        int deliveryWeek;
+        try {
+            String line = scanner.nextLine();
+            deliveryWeek = Integer.parseInt(line);
+        }
+        catch (Exception exception) {
+            System.out.println("Invalid delivery week value");
+            return;
+        }
 
-        System.out.println("Dati un feedback temei: ");
+        System.out.println("Introduce assignment's feedback:");
         String feedback = scanner.nextLine();
 
-        int result = service.saveNota(idStudent, idTema, valNota, predata, feedback);
-        if (result == 1) {
-            service.createStudentFile(idStudent, idTema);
-            System.out.println("Nota adaugata cu succes! \n");
+        int resultCode = service.saveNota(idStudent, idAssignment, gradeValue, deliveryWeek, feedback);
+        if (resultCode == 0) {
+            service.createStudentFile(idStudent, idAssignment);
+            System.out.println("Grade successfully added");
         }
-        else if (result == 0) {
-            System.out.println("Nota existenta! \n");
+        else if (resultCode == -1) {
+            System.out.println("Validation failed for the grade");
+        }
+        else if (resultCode == -2) {
+            System.out.println("Id was already taken");
         }
         else {
-            System.out.println("Student sau tema inexistenta! \n");
+            System.out.println("Invalid id for student or assignment");
         }
     }
 
-    public void uiDeleteStudent() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Introduceti ID-ul studentului: ");
+    private void uiDeleteStudent() {
+        System.out.println("Introduce student's ID:");
         String id = scanner.nextLine();
 
-        if (service.deleteStudent(id) != 0) {
-            System.out.println("Student sters cu succes! \n");
+        int resultCode = service.deleteStudent(id);
+        if (resultCode == 0) {
+            System.out.println("Student successfully deleted");
         }
-        else {
-            System.out.println("Studentul nu exista! \n");
+        else if (resultCode == -1) {
+            System.out.println("Student's id doesn't exist");
         }
     }
 
-    public void uiDeleteTema() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Introduceti ID-ul temei: ");
+    public void uiDeleteAssignment() {
+        System.out.println("Introduce assignment's ID:");
         String id = scanner.nextLine();
 
-        if (service.deleteTema(id) != 0) {
-            System.out.println("Tema stearsa cu succes! \n");
+        int resultCode = service.deleteAssignment(id);
+        if (resultCode == 0) {
+            System.out.println("Assigment successfully deleted");
         }
-        else {
-            System.out.println("Tema nu exista! \n");
+        else if (resultCode == -1) {
+            System.out.println("Assigment's id doesn't exist");
         }
     }
 
     public void uiUpdateStudent() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Introduceti ID-ul studentului: ");
+        System.out.println("Introduce student's ID:");
         String id = scanner.nextLine();
 
-        System.out.println("Introduceti noul nume al studentului: ");
-        String numeNou = scanner.nextLine();
+        System.out.println("Introduce student's new name:");
+        String newName = scanner.nextLine();
 
-        System.out.println("Introduceti noua grupa a studentului: ");
-        int grupaNoua = scanner.nextInt();
+        System.out.println("Introduce student's new group:");
+        int newGroup = 0;
+        try {
+            newGroup = scanner.nextInt();
+        }
+        catch (Exception exception) {
+            System.out.println("Invalid new group value");
+            return;
+        }
 
-        if (service.updateStudent(id, numeNou, grupaNoua) != 0) {
-            System.out.println("Student actualizat cu succes! \n");
+        int resultCode = service.updateStudent(id, newName, newGroup);
+        if (resultCode == 0) {
+            System.out.println("Student successfully updated");
+        }
+        else if (resultCode == -1) {
+            System.out.println("Validation failed for the student");
         }
         else {
-            System.out.println("Studentul nu exista! \n");
+            System.out.println("Student's id doesn't exist");
         }
     }
 
-    public void uiExtendDeadline() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Introduceti ID-ul temei: ");
+    private void uiExtendDeadline() {
+        System.out.println("Introduce assignment's ID:");
         String id = scanner.nextLine();
 
-        System.out.println("Introduceti numarul de saptamani adaugate la deadline: ");
-        int nrWeeks = scanner.nextInt();
-
-        if (service.extendDeadline(id, nrWeeks) != 0) {
-            System.out.println("Deadline extins cu succes! \n");
+        System.out.println("Introduce no of weeks to add for the deadline:");
+        int addedWeeksDeadline = 0;
+        try {
+            addedWeeksDeadline = scanner.nextInt();
         }
-        else {
-            System.out.println("Tema nu exista! \n");
+        catch (Exception exception) {
+            System.out.println("Invalid no of weeks value");
+            return;
+        }
+
+        int resultCode = service.extendDeadline(id, addedWeeksDeadline);
+        if (resultCode == 0) {
+            System.out.println("Deadline successfully extended");
+        }
+        else if (resultCode == -1) {
+            System.out.println("Validation failed for the assignment update");
+        }
+        else if (resultCode == -2) {
+            System.out.println("Assigment's id doesn't exist");
         }
     }
 
@@ -194,11 +252,16 @@ public class UI {
         Scanner scanner = new Scanner(System.in);
         int cmd = -1;
 
-        printMenu();
-
         while(cmd != 0) {
+            printMenu();
             System.out.println("Introduceti comanda: ");
-            cmd = scanner.nextInt();
+            try {
+                cmd = scanner.nextInt();
+            }
+            catch (Exception exception) {
+                System.out.println("Invalid command value. Try again");
+                continue;
+            }
 
             switch(cmd) {
                 case 11:
@@ -214,16 +277,16 @@ public class UI {
                     uiSaveStudent();
                     break;
                 case 22:
-                    uiSaveTema();
+                    uiSaveAssignment();
                     break;
                 case 23:
-                    uiSaveNota();
+                    uiSaveGrade();
                     break;
                 case 31:
                     uiDeleteStudent();
                     break;
                 case 32:
-                    uiDeleteTema();
+                    uiDeleteAssignment();
                     break;
                 case 4:
                     uiUpdateStudent();

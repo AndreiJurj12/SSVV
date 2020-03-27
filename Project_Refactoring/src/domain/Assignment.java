@@ -35,7 +35,7 @@ public class Assignment implements HasID<String> {
 
     @Override
     public String toString() {
-        return "Assignment{" + "id='" + idAssignment + "', description='" + description + ", deadline=" + deadline +
+        return "Assignment{" + "id='" + idAssignment + "', description='" + description + "', deadline=" + deadline +
                 ", startline=" + startline + '}';
     }
 

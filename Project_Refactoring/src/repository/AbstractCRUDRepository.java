@@ -55,7 +55,8 @@ public abstract class AbstractCRUDRepository<ID, E extends HasID<ID>> implements
     }
 
     @Override
-    public E update(E entity) {
+    public E update(E entity) throws ValidationException {
+        /*
         try {
             validator.validate(entity);
             return entities.replace(entity.getID(), entity);
@@ -64,5 +65,8 @@ public abstract class AbstractCRUDRepository<ID, E extends HasID<ID>> implements
             System.out.println("Entity is not valid! \n");
             return null;
         }
+        */
+        validator.validate(entity);
+        return entities.replace(entity.getID(), entity);
     }
 }

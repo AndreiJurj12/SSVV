@@ -90,7 +90,7 @@ public abstract class AbstractXMLRepository<ID, E extends HasID<ID>> extends Abs
     }
 
     @Override
-    public E update(E newEntity) {
+    public E update(E newEntity) throws ValidationException {
         E result = super.update(newEntity);
         writeToXmlFile();
 

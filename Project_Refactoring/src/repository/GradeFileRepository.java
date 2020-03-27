@@ -16,7 +16,7 @@ public class GradeFileRepository extends AbstractFileRepository<Pair<String, Str
         try (BufferedReader buffer = new BufferedReader(new FileReader(filename))) {
             buffer.lines().collect(Collectors.toList()).forEach(line -> {
                 String[] result = line.split("#");
-                Grade grade = new Grade(new Pair(result[0], result[1]), Double.parseDouble(result[2]),
+                Grade grade = new Grade(new Pair<>(result[0], result[1]), Double.parseDouble(result[2]),
                         Integer.parseInt(result[3]), result[4]);
                 try {
                     super.save(grade);

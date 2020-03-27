@@ -36,5 +36,5 @@ public interface CRUDRepository<ID, E> {
      * @throws IllegalArgumentException if the given entity is null.
      * @throws ValidationException if the entity is not valid.
      **/
-    E update(E entity);
+    E update(E entity) throws ValidationException;
 }
